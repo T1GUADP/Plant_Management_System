@@ -1,0 +1,30 @@
+Changelog.
+
+0.0.1   
+date:	-Added ModeButton	//Toggles current mode (Auto/Manual) (non-functional)
+20.3.16	-Added ModeTextLabel1	//"CurrentMode:" (non-functional)
+	-Added ModeTextLabel2	//displays current mode (Auto/Manual) (non-functional)
+	-Added ExitButton	//Exits application (non-functional)
+	-Added Placeholder	//PLacerholder for dropdown menu (non-functional)			
+	-Added ApplyButton	//non-functional
+	-Added NewEntryButton	//non-functional
+	-Added DeleteEntryButton//non-functional
+	-Added ModifyButton	//non-functional
+	-Added gLayout		//gridlayout for :ModeButton;ModeTextLabel1;ModeTextLabel2;ExitButton;Placeholder;ApplyButton;NewEntryButton;DeleteEntryButton;ModifyButton
+	-Added ModeButton
+	-Added ModeButton
+	-Added ModeButton
+	-Added ModeButton
+	-Added ModeButton
+	-Added Tabs (1-3)
+	-Added 3 empty threads
+
+0.0.2	-Added WaterPlot	//non-functional
+date:	-Added Watercurve	//non-functional
+25.3.16	-Added TemperaturePlot	//non-functional
+	-Added Temperaturecurve	//non-functional
+	-Added LightPlot	//non-functional
+	-Added Lightcurve	//non-functional
+	-Added hLayout		//Horizontal layout for Plots
+
+
