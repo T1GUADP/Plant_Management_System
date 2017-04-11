@@ -1,0 +1,7 @@
+SOURCES += \
+    main.cpp
+
+HEADERS +=
+
+
+
