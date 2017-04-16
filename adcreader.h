@@ -6,7 +6,8 @@
 class ADCreader : public QThread
 {
 public:
-    ADCreader() {running = 0;};
+    ADCreader(double frequency);    //constructor
+    ~ADCreader(); //destructor
     void quit();
     void run();
 private:

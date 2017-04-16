@@ -16,7 +16,7 @@ date:	-Added ModeButton				//Toggles current mode (Auto/Manual) (non-functional)
 
 0.0.2	-Added WaterPlot				//non-functional
 date:	-Added Watercurve				//non-functional
-25.3.16	-Added TemperaturePlot				//non-functional
+25.3.17	-Added TemperaturePlot				//non-functional
 	-Added Temperaturecurve				//non-functional
 	-Added LightPlot				//non-functional
 	-Added Lightcurve				//non-functional
@@ -24,7 +24,7 @@ date:	-Added Watercurve				//non-functional
 
 0.0.3	-Added notes
 date:	-Changed executable name			//From "QwtExample" to "PlantManagementSytem"
-27.3.16 -Added CurrentWaterDisplay			//Label
+27.3.17 -Added CurrentWaterDisplay			//Label
 	-Added CurrentTemperatureDisplay		//Label
 	-Added CurrentLightDisplay			//Label
    	-Added TargetWaterDisplay			//Label
@@ -47,3 +47,12 @@ date:	-Changed executable name			//From "QwtExample" to "PlantManagementSytem"
 	-Added ExitButton functionality			//ExitButton now closes the application
 	-Added modetoggle function			//Currently only changes ModeTextLabel2 between "Auto" and "Manual"
 	-Added ModeButton functionality			//Triggers modetoggle function
+
+0.0.4	-Changed CurrentWaterDisplay			//QLCDNumber=>QLabel
+date:   -Changed CurrentTemperatureDisplay		//QLCDNumber=>QLabel
+28.3.17 -Changed CurrentLightDisplay			//QLCDNumber=>QLabel
+	-Changed gridlayeout 				//gLayout1 (the two rows are now combined into one)
+	-Added Placeholder connection to all "Currents" //CurrentWaterDisplay;CurrentTemperatureDisplay;CurrentLightDisplay now display current water;temperature and light value
+	-Added thread instance				//Thread only capable of displaying "Tick" every second
+
+

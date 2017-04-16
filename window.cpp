@@ -24,7 +24,7 @@ Window::Window() : gain(5), count(0)
     //firstrow functions
     connect( ExitButton, SIGNAL(pressed()), SLOT(close()) ); //Gives "Exit button" the function to exit upon being pressed.
     connect( ModeButton, SIGNAL(pressed()), SLOT(modetoggle()) ); //Gives "ModeButton" triggers "modetoggle" function
-
+    //modetoggle()
     //Second row Interactables
     //PresetComboBox = new QComboBox;//will contain target presets for water, light and temperature
     Placeholder = new QPushButton; //Placeholder for PresetComboBox
@@ -48,6 +48,7 @@ Window::Window() : gain(5), count(0)
     Watercurve = new QwtPlotCurve; //Assignes curve to plot
     TemperaturePlot =new QwtPlot;
     Temperaturecurve = new QwtPlotCurve;
+    TargetTemperaturecurve = new QwtPlotCurve;
     LightPlot = new QwtPlot;
     Lightcurve = new QwtPlotCurve;
     //Third row layout
@@ -56,9 +57,9 @@ Window::Window() : gain(5), count(0)
     hLayout->addWidget(TemperaturePlot);
     hLayout->addWidget(LightPlot);
     //Fourth row Interactables
-    CurrentWaterDisplay = new QLCDNumber;
-    CurrentTemperatureDisplay = new QLCDNumber;
-    CurrentLightDisplay = new QLCDNumber;
+    CurrentWaterDisplay = new QLabel;
+    CurrentTemperatureDisplay = new QLabel;
+    CurrentLightDisplay = new QLabel;
     TargetWaterDisplay = new QSpinBox;
     TargetTemperatureDisplay = new QSpinBox;
     TargetLightDisplay = new QSpinBox;
@@ -77,17 +78,17 @@ Window::Window() : gain(5), count(0)
     //Fourth row Layout
     gLayout1 = new QGridLayout;
     gLayout1->addWidget(TargetWaterLabel,0,0,Qt::AlignCenter);
-    gLayout1->addWidget(CurrentWaterLabel,0,1,Qt::AlignCenter);
-    gLayout1->addWidget(TargetTemperatureLabel,0,2,Qt::AlignCenter);
-    gLayout1->addWidget(CurrentTemperatureLabel,0,3,Qt::AlignCenter);
-    gLayout1->addWidget(TargetLightLabel,0,4,Qt::AlignCenter);
-    gLayout1->addWidget(CurrentLightLabel,0,5,Qt::AlignCenter);
-    gLayout1->addWidget(TargetWaterDisplay,1,0,Qt::AlignCenter);
-    gLayout1->addWidget(CurrentWaterDisplay,1,1,Qt::AlignCenter);
-    gLayout1->addWidget(TargetTemperatureDisplay,1,2,Qt::AlignCenter);
-    gLayout1->addWidget(CurrentTemperatureDisplay,1,3,Qt::AlignCenter);
-    gLayout1->addWidget(TargetLightDisplay,1,4,Qt::AlignCenter);
-    gLayout1->addWidget(CurrentLightDisplay,1,5,Qt::AlignCenter);
+    gLayout1->addWidget(CurrentWaterLabel,0,2,Qt::AlignCenter);
+    gLayout1->addWidget(TargetTemperatureLabel,0,4,Qt::AlignCenter);
+    gLayout1->addWidget(CurrentTemperatureLabel,0,6,Qt::AlignCenter);
+    gLayout1->addWidget(TargetLightLabel,0,8,Qt::AlignCenter);
+    gLayout1->addWidget(CurrentLightLabel,0,10,Qt::AlignCenter);
+    gLayout1->addWidget(TargetWaterDisplay,0,1,Qt::AlignCenter);
+    gLayout1->addWidget(CurrentWaterDisplay,0,3,Qt::AlignCenter);
+    gLayout1->addWidget(TargetTemperatureDisplay,0,5,Qt::AlignCenter);
+    gLayout1->addWidget(CurrentTemperatureDisplay,0,7,Qt::AlignCenter);
+    gLayout1->addWidget(TargetLightDisplay,0,9,Qt::AlignCenter);
+    gLayout1->addWidget(CurrentLightDisplay,0,11,Qt::AlignCenter);
     //Fifth row Interactables
     WaterSensorConnectionStateLabel = new QLabel;
     WaterSensorConnectionStateLabel->setText("Connected");
@@ -109,6 +110,7 @@ Window::Window() : gain(5), count(0)
     gLayout2->addWidget(ManualTemperatureTrigger,0,3,Qt::AlignCenter);
     gLayout2->addWidget(LightSensorConnectionStateLabel,0,4,Qt::AlignCenter);
     gLayout2->addWidget(ManualLightTrigger,0,5,Qt::AlignCenter);
+    //Fifth row functionality
 
 
 
@@ -144,6 +146,9 @@ Window::Window() : gain(5), count(0)
         Watercurve->attach(WaterPlot);
         Temperaturecurve->setSamples(xData, yData, plotDataSize);
         Temperaturecurve->attach(TemperaturePlot);
+
+
+
         Lightcurve->setSamples(xData, yData, plotDataSize);
         Lightcurve->attach(LightPlot);
         plot->replot();
@@ -195,6 +200,7 @@ Window::~Window() {
 void Window::timerEvent( QTimerEvent * )
 {
     double inVal = gain * sin( M_PI * count/50.0 );
+
     ++count;
 
     // add the new input to the plot
@@ -206,7 +212,6 @@ void Window::timerEvent( QTimerEvent * )
     Lightcurve->setSamples(xData, yData, plotDataSize);
 
 
-
     plot->replot();
     WaterPlot->replot();
     TemperaturePlot->replot();
@@ -214,6 +219,11 @@ void Window::timerEvent( QTimerEvent * )
 
     // set the thermometer value
     thermo->setValue( inVal + 10 );
+    //update "Current:" values in the fifth row
+    CurrentWaterDisplay-> setText(QString::number(round(inVal*10)/10));
+    CurrentTemperatureDisplay-> setText((QString::number(round(inVal*10)/10))+"C");
+    CurrentLightDisplay-> setText(QString::number(round(inVal*10)/10));
+
 
 }
 
@@ -224,6 +234,8 @@ void Window::setGain(double gain)
     // for example purposes just change the amplitude of the generated input
     this->gain = gain;
 }
+
+
 
     bool currentmode = true;
 

@@ -10,9 +10,10 @@
 #include <qlabel.h>
 #include <qcombobox.h>
 #include <qslider.h>
-#include  <qscrollbar.h>
+#include <qscrollbar.h>
 #include <qlcdnumber.h>
 #include <qspinbox.h>
+
 
 // #include "adcreader.h"
 
@@ -41,9 +42,7 @@ private:
     QSpinBox     *TargetWaterDisplay;
     QSpinBox     *TargetTemperatureDisplay;
     QSpinBox     *TargetLightDisplay;
-    QLCDNumber   *CurrentWaterDisplay;
-    QLCDNumber   *CurrentTemperatureDisplay;
-    QLCDNumber   *CurrentLightDisplay;
+
     QPushButton  *ManualWaterTrigger;
     QPushButton  *ManualTemperatureTrigger;
     QPushButton  *ManualLightTrigger;
@@ -54,6 +53,9 @@ private:
     QPushButton  *Placeholder;
     QComboBox    *PresetComboBox;
     QPushButton  *ExitButton;
+    QLabel       *CurrentWaterDisplay;
+    QLabel       *CurrentTemperatureDisplay;
+    QLabel       *CurrentLightDisplay;
     QLabel       *ModeTextLabel1;
     QLabel       *ModeTextLabel2;
     QLabel       *TargetWaterLabel;
@@ -75,6 +77,7 @@ private:
     QwtPlotCurve *curve;
     QwtPlotCurve *Watercurve;
     QwtPlotCurve *Temperaturecurve;
+    QwtPlotCurve *TargetTemperaturecurve;
     QwtPlotCurve *Lightcurve;
 
     // layout elements from Qt itself http://qt-project.org/doc/qt-4.8/classes.html
@@ -86,7 +89,7 @@ private:
     QHBoxLayout  *hLayout;  // horizontal layout
     QVBoxLayout  *VLayout1;  // horizontal layout
 
-    static const int plotDataSize = 100;
+    static const int plotDataSize = 200;
 
     // data arrays for the plot
     double xData[plotDataSize];
@@ -94,6 +97,7 @@ private:
     bool currentmode;
     double gain;
     int count;
+
 
 //	ADCreader *adcreader;
 };
