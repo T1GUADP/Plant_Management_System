@@ -1,8 +1,10 @@
 #include "window.h"
-// #include "adcreader.h"
 
 #include <cmath>  // for sine stuff
+#include <math.h>  //
+#include <wiringPi.h>
 
+#include "adcreader.h"
 
 Window::Window() : gain(5), TargetWaterLevel(0), TargetTemperatureLevel(0), TargetLightLevel(0), count(0), currentmode(true)
 {
@@ -135,9 +137,16 @@ Window::Window() : gain(5), TargetWaterLevel(0), TargetTemperatureLevel(0), Targ
         for( int index=0; index<plotDataSize; ++index )
         {
             xData[index] = index;
-            yData[index] = gain * sin( M_PI * index/50 );
+            yData[index] = 0;
+            xCurrentWaterData[index] = index;
+            yCurrentWaterData[index] = 0;
+            xCurrentTemperatureData[index]= index;
+            yCurrentTemperatureData[index] = 0;
+            xCurrentLightData[index]= index;
+            yCurrentLightData[index] = 0;
+            //yData[index] = gain * sin( M_PI * index/50 );
         }
-
+        // set up the initial plot target data
         for( int index=0; index<plotDataSize; ++index )
         {
             xTargetWaterData[index] = index;
@@ -215,30 +224,78 @@ Window::~Window() {
 void Window::timerEvent( QTimerEvent * )
 {
     double inVal = gain * sin( M_PI * count/50.0 );
-
     ++count;
+    //
 
     // add the new input to the plot
+    {
     memmove( yData, yData+1, (plotDataSize-1) * sizeof(double) );
     yData[plotDataSize-1] = inVal;
+
+    memmove( yCurrentWaterData, yCurrentWaterData+1, (plotDataSize-1) * sizeof(double) );
+    yCurrentWaterData[plotDataSize-1] = inVal;
+
+    memmove( yCurrentTemperatureData, yCurrentTemperatureData+1, (plotDataSize-1) * sizeof(double) );
+    yCurrentTemperatureData[plotDataSize-1] = inVal;
+
+    memmove( yCurrentLightData, yCurrentLightData+1, (plotDataSize-1) * sizeof(double) );
+    yCurrentLightData[plotDataSize-1] = inVal;
+    }
+    //Conditions
+    {
+    if (inVal<TargetWaterLevel)
+    {
+       WaterSensorConnectionStateLabel->setText("Too Low");
+       //digitalWrite (0, HIGH) ; delay (500);
+    }
+    else
+    {
+       WaterSensorConnectionStateLabel->setText("Ok");
+       //digitalWrite (0,  LOW) ; delay (500);
+    }
+    if (inVal<TargetTemperatureLevel)
+    {
+       TemperatureSensorConnectionStateLabel->setText("Too Low");
+       //digitalWrite (0, HIGH) ; delay (500);
+    }
+    else
+    {
+       TemperatureSensorConnectionStateLabel->setText("Ok");
+       //digitalWrite (0,  LOW) ; delay (500);
+    }
+    if (inVal<TargetLightLevel)
+    {
+       LightSensorConnectionStateLabel->setText("Too Low");
+       //digitalWrite (0, HIGH) ; delay (500);
+    }
+    else
+    {
+       LightSensorConnectionStateLabel->setText("Ok");
+       //digitalWrite (0,  LOW) ; delay (500);
+    }
+    }
+    //Set Plotdata
+    {
     curve->setSamples(xData, yData, plotDataSize);
-    Watercurve->setSamples(xData, yData, plotDataSize);
-    Temperaturecurve->setSamples(xData, yData, plotDataSize);
-    Lightcurve->setSamples(xData, yData, plotDataSize);
-
-
+    Watercurve->setSamples(xCurrentWaterData, yCurrentWaterData, plotDataSize);
+    Temperaturecurve->setSamples(xCurrentTemperatureData, yCurrentTemperatureData, plotDataSize);
+    Lightcurve->setSamples(xCurrentLightData, yCurrentLightData, plotDataSize);
+    }
+    //Plot data
+    {
     plot->replot();
     WaterPlot->replot();
     TemperaturePlot->replot();
     LightPlot->replot();
-
+    }
     // set the thermometer value
     thermo->setValue( inVal + 10 );
     //update "Current:" values in the fifth row
+    {
     CurrentWaterDisplay-> setText(QString::number(round(inVal*10)/10));
     CurrentTemperatureDisplay-> setText((QString::number(round(inVal*10)/10))+"C");
     CurrentLightDisplay-> setText(QString::number(round(inVal*10)/10));
-
+    }
 
 }
 
@@ -294,11 +351,13 @@ void Window::setLightTarget(int TargetLightLevel)
 void Window::modetoggle()
 {
     currentmode = !currentmode;
-    ExitButton->setEnabled(currentmode);
+    //ExitButton->setEnabled(currentmode);
     ManualWaterTrigger->setEnabled(currentmode);
     ManualTemperatureTrigger->setEnabled(currentmode);
     ManualLightTrigger->setEnabled(currentmode);
-
+    TargetWaterDisplay->setDisabled(currentmode);
+    TargetTemperatureDisplay->setDisabled(currentmode);
+    TargetLightDisplay->setDisabled(currentmode);
 
     if(currentmode==true){
         ModeTextLabel2->setText("Manual");

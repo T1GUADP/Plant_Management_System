@@ -107,6 +107,13 @@ private:
     double xTargetLightData[plotDataSize];
     double yTargetLightData[plotDataSize];
     //
+    double xCurrentWaterData[plotDataSize];
+    double yCurrentWaterData[plotDataSize];
+    double xCurrentTemperatureData[plotDataSize];
+    double yCurrentTemperatureData[plotDataSize];
+    double xCurrentLightData[plotDataSize];
+    double yCurrentLightData[plotDataSize];
+    //
     double gain;
     int TargetWaterLevel;
     int TargetTemperatureLevel;
