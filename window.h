@@ -11,6 +11,8 @@
 #include <qcombobox.h>
 #include <qslider.h>
 #include  <qscrollbar.h>
+#include <qlcdnumber.h>
+#include <qspinbox.h>
 
 // #include "adcreader.h"
 
@@ -29,10 +31,22 @@ public:
 
 public slots:
     void setGain(double gain);
+    void modetoggle();
 
 // internal variables for the window class
 private:
 
+
+
+    QSpinBox     *TargetWaterDisplay;
+    QSpinBox     *TargetTemperatureDisplay;
+    QSpinBox     *TargetLightDisplay;
+    QLCDNumber   *CurrentWaterDisplay;
+    QLCDNumber   *CurrentTemperatureDisplay;
+    QLCDNumber   *CurrentLightDisplay;
+    QPushButton  *ManualWaterTrigger;
+    QPushButton  *ManualTemperatureTrigger;
+    QPushButton  *ManualLightTrigger;
     QPushButton  *ModifyButton;
     QPushButton  *NewEntryButton;
     QPushButton  *DeleteEntryButton;
@@ -42,6 +56,15 @@ private:
     QPushButton  *ExitButton;
     QLabel       *ModeTextLabel1;
     QLabel       *ModeTextLabel2;
+    QLabel       *TargetWaterLabel;
+    QLabel       *TargetTemperatureLabel;
+    QLabel       *TargetLightLabel;
+    QLabel       *CurrentWaterLabel;
+    QLabel       *CurrentTemperatureLabel;
+    QLabel       *CurrentLightLabel;
+    QLabel       *WaterSensorConnectionStateLabel;
+    QLabel       *TemperatureSensorConnectionStateLabel;
+    QLabel       *LightSensorConnectionStateLabel;
     QPushButton  *ModeButton;
     QwtKnob      *knob;
     QwtThermo    *thermo;
@@ -57,6 +80,8 @@ private:
     // layout elements from Qt itself http://qt-project.org/doc/qt-4.8/classes.html
     QVBoxLayout  *vLayout;  // vertical layout
     QGridLayout  *gLayout;  // horizontal layout
+    QGridLayout  *gLayout1;  // horizontal layout
+    QGridLayout  *gLayout2;  // horizontal layout
     QHBoxLayout  *hLayout1;  // horizontal layout
     QHBoxLayout  *hLayout;  // horizontal layout
     QVBoxLayout  *VLayout1;  // horizontal layout
@@ -66,7 +91,7 @@ private:
     // data arrays for the plot
     double xData[plotDataSize];
     double yData[plotDataSize];
-
+    bool currentmode;
     double gain;
     int count;
 

@@ -7,54 +7,109 @@
 Window::Window() : gain(5), count(0)
 {
     //first row Interactables
-    ModeButton = new QPushButton;
-    ModeButton->setText("Toggle Mode");
-    ModeTextLabel1 = new QLabel;
-    ModeTextLabel1->setText("Current Mode: ");
-    ModeTextLabel2 = new QLabel;
-    ModeTextLabel2->setText("Placeholder");
-    ExitButton = new QPushButton;
-    ExitButton->setText("Exit Program");
-    //firstrow layout
+    ModeButton = new QPushButton;   //Creates toggle Auto/Manual mode button
+    ModeButton->setText("Toggle Mode");  //Sets text for ModeButton
+    ModeTextLabel1 = new QLabel; // Creates description label
+    ModeTextLabel1->setText("Current Mode: "); //Sets text for ModeTextLabel1
+    ModeTextLabel2 = new QLabel; //Creates label to show the current mode
+    ModeTextLabel2->setText("Placeholder"); //Sets initial text for ModeTextLabel2
+    ExitButton = new QPushButton; //creates exit button
+    ExitButton->setText("Exit Program"); //sets exit button text
+    //firstrow layout (Creates new gridlayout and adds the first row Interactables)
     gLayout = new QGridLayout;
     gLayout->addWidget(ModeButton,0,0,Qt::AlignLeft);
-    gLayout->addWidget(ModeTextLabel1,0,1,Qt::AlignLeft);
+    gLayout->addWidget(ModeTextLabel1,0,1,Qt::AlignRight);
     gLayout->addWidget(ModeTextLabel2,0,2,Qt::AlignLeft);
     gLayout->addWidget(ExitButton,0,4,Qt::AlignRight);
+    //firstrow functions
+    connect( ExitButton, SIGNAL(pressed()), SLOT(close()) ); //Gives "Exit button" the function to exit upon being pressed.
+    connect( ModeButton, SIGNAL(pressed()), SLOT(modetoggle()) ); //Gives "ModeButton" triggers "modetoggle" function
+
     //Second row Interactables
-    //PresetComboBox = new QComboBox;//
-    Placeholder = new QPushButton;
+    //PresetComboBox = new QComboBox;//will contain target presets for water, light and temperature
+    Placeholder = new QPushButton; //Placeholder for PresetComboBox
     Placeholder->setText("Placeholder");
-    ApplyButton = new QPushButton;
+    ApplyButton = new QPushButton; //Will apply the selected preset
     ApplyButton->setText("Apply");
-    NewEntryButton = new QPushButton;
+    NewEntryButton = new QPushButton; //Will add new entry to the preset list based on current values
     NewEntryButton->setText("New Entry");
-    DeleteEntryButton = new QPushButton;
+    DeleteEntryButton = new QPushButton; //Will delete currently selected entry
     DeleteEntryButton->setText("Delete Entry");
-    ModifyButton = new QPushButton;
+    ModifyButton = new QPushButton; //Will modify currently selected entry with changed values (currently selected)
     ModifyButton->setText("Modify Current");
-    //Second row layout
+    //Second row layout (adds widgets to gridlayout)
     gLayout->addWidget(Placeholder,1,0,Qt::AlignLeft);
-    gLayout->addWidget(ApplyButton,1,1,Qt::AlignLeft);
-    gLayout->addWidget(NewEntryButton,1,2,Qt::AlignLeft);
-    gLayout->addWidget(DeleteEntryButton,1,3,Qt::AlignLeft);
+    gLayout->addWidget(ApplyButton,1,1,Qt::AlignCenter);
+    gLayout->addWidget(NewEntryButton,1,2,Qt::AlignCenter);
+    gLayout->addWidget(DeleteEntryButton,1,3,Qt::AlignCenter);
     gLayout->addWidget(ModifyButton,1,4,Qt::AlignRight);
     //Third row Interactables
-    WaterPlot =new QwtPlot;
-    Watercurve = new QwtPlotCurve;
-    //WaterVerticalSlider = new QSLIDER_V;
+    WaterPlot =new QwtPlot; //Creates new plot
+    Watercurve = new QwtPlotCurve; //Assignes curve to plot
     TemperaturePlot =new QwtPlot;
     Temperaturecurve = new QwtPlotCurve;
-    //TemperatureVerticalSlider
     LightPlot = new QwtPlot;
     Lightcurve = new QwtPlotCurve;
-    //LightVerticalSlider
     //Third row layout
-    hLayout = new QHBoxLayout;
-    hLayout->addWidget(WaterPlot);
+    hLayout = new QHBoxLayout; //Creates new Horizontal layout
+    hLayout->addWidget(WaterPlot); //Assigns widget to horizontal layout
     hLayout->addWidget(TemperaturePlot);
     hLayout->addWidget(LightPlot);
-    //Fourth row layout
+    //Fourth row Interactables
+    CurrentWaterDisplay = new QLCDNumber;
+    CurrentTemperatureDisplay = new QLCDNumber;
+    CurrentLightDisplay = new QLCDNumber;
+    TargetWaterDisplay = new QSpinBox;
+    TargetTemperatureDisplay = new QSpinBox;
+    TargetLightDisplay = new QSpinBox;
+    TargetWaterLabel = new QLabel;
+    TargetTemperatureLabel = new QLabel;
+    TargetLightLabel = new QLabel;
+    TargetWaterLabel->setText("Target:");
+    TargetTemperatureLabel->setText("Target:");
+    TargetLightLabel->setText("Target:");
+    CurrentWaterLabel = new QLabel;
+    CurrentTemperatureLabel = new QLabel;
+    CurrentLightLabel = new QLabel;
+    CurrentWaterLabel->setText("Current:");
+    CurrentTemperatureLabel->setText("Current:");
+    CurrentLightLabel->setText("Current:");
+    //Fourth row Layout
+    gLayout1 = new QGridLayout;
+    gLayout1->addWidget(TargetWaterLabel,0,0,Qt::AlignCenter);
+    gLayout1->addWidget(CurrentWaterLabel,0,1,Qt::AlignCenter);
+    gLayout1->addWidget(TargetTemperatureLabel,0,2,Qt::AlignCenter);
+    gLayout1->addWidget(CurrentTemperatureLabel,0,3,Qt::AlignCenter);
+    gLayout1->addWidget(TargetLightLabel,0,4,Qt::AlignCenter);
+    gLayout1->addWidget(CurrentLightLabel,0,5,Qt::AlignCenter);
+    gLayout1->addWidget(TargetWaterDisplay,1,0,Qt::AlignCenter);
+    gLayout1->addWidget(CurrentWaterDisplay,1,1,Qt::AlignCenter);
+    gLayout1->addWidget(TargetTemperatureDisplay,1,2,Qt::AlignCenter);
+    gLayout1->addWidget(CurrentTemperatureDisplay,1,3,Qt::AlignCenter);
+    gLayout1->addWidget(TargetLightDisplay,1,4,Qt::AlignCenter);
+    gLayout1->addWidget(CurrentLightDisplay,1,5,Qt::AlignCenter);
+    //Fifth row Interactables
+    WaterSensorConnectionStateLabel = new QLabel;
+    WaterSensorConnectionStateLabel->setText("Connected");
+    TemperatureSensorConnectionStateLabel = new QLabel;
+    TemperatureSensorConnectionStateLabel->setText("Connected");
+    LightSensorConnectionStateLabel = new QLabel;
+    LightSensorConnectionStateLabel->setText("Connected");
+    ManualWaterTrigger = new QPushButton;
+    ManualWaterTrigger->setText("Release Water");
+    ManualTemperatureTrigger = new QPushButton;
+    ManualTemperatureTrigger->setText("Increase Temperature");
+    ManualLightTrigger = new QPushButton;
+    ManualLightTrigger->setText("Toggle Light");
+    //Fifth row Layout
+    gLayout2 = new QGridLayout;
+    gLayout2->addWidget(WaterSensorConnectionStateLabel,0,0,Qt::AlignCenter);
+    gLayout2->addWidget(ManualWaterTrigger,0,1,Qt::AlignCenter);
+    gLayout2->addWidget(TemperatureSensorConnectionStateLabel,0,2,Qt::AlignCenter);
+    gLayout2->addWidget(ManualTemperatureTrigger,0,3,Qt::AlignCenter);
+    gLayout2->addWidget(LightSensorConnectionStateLabel,0,4,Qt::AlignCenter);
+    gLayout2->addWidget(ManualLightTrigger,0,5,Qt::AlignCenter);
+
 
 
 
@@ -115,6 +170,8 @@ Window::Window() : gain(5), count(0)
         VLayout1->addLayout(gLayout);
         //VLayout1->addLayout(hLayout1);
         VLayout1->addLayout(hLayout);
+        VLayout1->addLayout(gLayout1);
+        VLayout1->addLayout(gLayout2);
         setLayout(VLayout1);
 
 
@@ -157,6 +214,7 @@ void Window::timerEvent( QTimerEvent * )
 
     // set the thermometer value
     thermo->setValue( inVal + 10 );
+
 }
 
 
@@ -166,3 +224,20 @@ void Window::setGain(double gain)
     // for example purposes just change the amplitude of the generated input
     this->gain = gain;
 }
+
+    bool currentmode = true;
+
+void Window::modetoggle()
+{
+    currentmode = !currentmode;
+    ExitButton->setEnabled(currentmode);
+    if(currentmode==true){
+        ModeTextLabel2->setText("Auto");
+    }
+    else{
+        ModeTextLabel2->setText("Manual");
+    }
+
+
+}
+

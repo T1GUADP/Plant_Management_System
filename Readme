@@ -1,30 +1,49 @@
 Changelog.
 
 0.0.1   
-date:	-Added ModeButton	//Toggles current mode (Auto/Manual) (non-functional)
-20.3.16	-Added ModeTextLabel1	//"CurrentMode:" (non-functional)
-	-Added ModeTextLabel2	//displays current mode (Auto/Manual) (non-functional)
-	-Added ExitButton	//Exits application (non-functional)
-	-Added Placeholder	//PLacerholder for dropdown menu (non-functional)			
-	-Added ApplyButton	//non-functional
-	-Added NewEntryButton	//non-functional
-	-Added DeleteEntryButton//non-functional
-	-Added ModifyButton	//non-functional
-	-Added gLayout		//gridlayout for :ModeButton;ModeTextLabel1;ModeTextLabel2;ExitButton;Placeholder;ApplyButton;NewEntryButton;DeleteEntryButton;ModifyButton
-	-Added ModeButton
-	-Added ModeButton
-	-Added ModeButton
-	-Added ModeButton
-	-Added ModeButton
-	-Added Tabs (1-3)
-	-Added 3 empty threads
-
-0.0.2	-Added WaterPlot	//non-functional
-date:	-Added Watercurve	//non-functional
-25.3.16	-Added TemperaturePlot	//non-functional
-	-Added Temperaturecurve	//non-functional
-	-Added LightPlot	//non-functional
-	-Added Lightcurve	//non-functional
-	-Added hLayout		//Horizontal layout for Plots
+date:	-Added ModeButton				//Toggles current mode (Auto/Manual) (non-functional)
+20.3.16	-Added ModeTextLabel1				//"CurrentMode:" (non-functional)
+	-Added ModeTextLabel2				//displays current mode (Auto/Manual) (non-functional)
+	-Added ExitButton				//Exits application (non-functional)
+	-Added Placeholder				//PLacerholder for dropdown menu (non-functional)			
+	-Added ApplyButton				//non-functional
+	-Added NewEntryButton				//non-functional
+	-Added DeleteEntryButton			//non-functional
+	-Added ModifyButton				//non-functional
+	-Added text					//for buttons and labels
+	-Added gLayout					//gridlayout for :ModeButton;ModeTextLabel1;ModeTextLabel2;ExitButton;Placeholder;ApplyButton;NewEntryButton;DeleteEntryButton;ModifyButton
 
 
+0.0.2	-Added WaterPlot				//non-functional
+date:	-Added Watercurve				//non-functional
+25.3.16	-Added TemperaturePlot				//non-functional
+	-Added Temperaturecurve				//non-functional
+	-Added LightPlot				//non-functional
+	-Added Lightcurve				//non-functional
+	-Added hLayout					//Horizontal layout for Plots
+
+0.0.3	-Added notes
+date:	-Changed executable name			//From "QwtExample" to "PlantManagementSytem"
+27.3.16 -Added CurrentWaterDisplay			//Label
+	-Added CurrentTemperatureDisplay		//Label
+	-Added CurrentLightDisplay			//Label
+   	-Added TargetWaterDisplay			//Label
+   	-Added TargetTemperatureDisplay			//Label
+    	-Added TargetLightDisplay			//Label
+   	-Added CurrentWaterLabel			//Label
+   	-Added CurrentTemperatureLabel			//Label
+    	-Added CurrentLightLabel 			//Label
+   	-Added TargetWaterLabel				//Spinbox ;non-functional
+   	-Added TargetTemperatureLabel			//Spinbox ;non-functional
+    	-Added CurrentLightLabel 			//Spinbox ;non-functional
+	-Added Gridlayouts				//gLayout1 & gLayout2
+    	-Added WaterSensorConnectionStateLabel		//Label
+    	-Added TemperatureSensorConnectionStateLabel	//Label
+    	-Added LightSensorConnectionStateLabel		//Label
+    	-Added ManualWaterTrigger			//non-functional
+    	-Added ManualTemperatureTrigger			//non-functional
+    	-Added ManualLightTrigger			//non-functional
+	-Added text					//Added text for all buttons and labels
+	-Added ExitButton functionality			//ExitButton now closes the application
+	-Added modetoggle function			//Currently only changes ModeTextLabel2 between "Auto" and "Manual"
+	-Added ModeButton functionality			//Triggers modetoggle function
