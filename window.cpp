@@ -5,9 +5,19 @@
 #include <wiringPi.h>
 
 #include "adcreader.h"
+#include <iostream>
 
-Window::Window() : gain(5), TargetWaterLevel(0), TargetTemperatureLevel(0), TargetLightLevel(0), count(0), currentmode(true)
+using namespace std;
+
+Window::Window(Buffer *buffer) : gain(5), TargetWaterLevel(0), TargetTemperatureLevel(0), TargetLightLevel(0), count(0), currentmode(true)
 {
+
+    this->buffer = buffer;
+
+    this->adcReader22 = new ADCreader(buffer, 22); //22 27
+    this->adcReader22->start();
+
+
     //first row Interactables
     ModeButton = new QPushButton;   //Creates toggle Auto/Manual mode button
     ModeButton->setText("Toggle Mode");  //Sets text for ModeButton
@@ -221,25 +231,35 @@ Window::~Window() {
     //delete adcreader;
 }
 
+
+
+
 void Window::timerEvent( QTimerEvent * )
 {
     double inVal = gain * sin( M_PI * count/50.0 );
     ++count;
-    //
 
+    //cout << "Test " << *(adcReader22->currentValue) << endl;
+
+    // get values from buffer
+    double waterinputvalue = inVal;
+    double temperatureinputvalue = this->buffer->calculatesAvg(22)*(-1)-9250; //*(adcReader22->currentValue)*(-1)-9270;
+
+
+    double lightinputvalue = inVal;
     // add the new input to the plot
     {
     memmove( yData, yData+1, (plotDataSize-1) * sizeof(double) );
     yData[plotDataSize-1] = inVal;
 
     memmove( yCurrentWaterData, yCurrentWaterData+1, (plotDataSize-1) * sizeof(double) );
-    yCurrentWaterData[plotDataSize-1] = inVal;
+    yCurrentWaterData[plotDataSize-1] = waterinputvalue;
 
     memmove( yCurrentTemperatureData, yCurrentTemperatureData+1, (plotDataSize-1) * sizeof(double) );
-    yCurrentTemperatureData[plotDataSize-1] = inVal;
+    yCurrentTemperatureData[plotDataSize-1] = temperatureinputvalue;
 
     memmove( yCurrentLightData, yCurrentLightData+1, (plotDataSize-1) * sizeof(double) );
-    yCurrentLightData[plotDataSize-1] = inVal;
+    yCurrentLightData[plotDataSize-1] = lightinputvalue;
     }
     //Conditions
     {

@@ -12,6 +12,8 @@
 
 #include "gz_clk.h"
 #include "gpio-sysfs.h"
+#include "window.h"
+#include  "buffer.h"
 
 using namespace std;
 static void pabort(const char *s)
@@ -23,7 +25,7 @@ static void pabort(const char *s)
 static const char *device = "/dev/spidev0.0";
 static uint8_t mode = SPI_CPHA | SPI_CPOL;
 static uint8_t bits = 8;
-static int drdy_GPIO = 22;
+//int drdy_GPIO = this-zzz ;//27
 
 static void writeReset(int fd)
 {
@@ -105,19 +107,20 @@ static int readData(int fd)
 }
 
 
-DataLogger::DataLogger()
+DataLogger::DataLogger(Buffer *buffer, int channel)
 {
     cout << "DataLogger created" << endl;
+    this->channel =  channel;   // not required
+    this->drdy_GPIO = channel;
+    this->buffer = buffer;
 }
 
-
-int DataLogger::initDataLogger() {
-    cout << "Init DataLogger" << endl;
+int DataLogger::runDataLogger(int* currentValue) {
     int ret = 0;
     int fd;
     int sysfs_fd;
 
-    this->no_tty = !isatty( fileno(stdout) );
+    int no_tty = !isatty( fileno(stdout) );
 
     fd = open(device, O_RDWR);
     if (fd < 0)
@@ -145,8 +148,8 @@ int DataLogger::initDataLogger() {
     if (ret == -1)
         pabort("can't get bits per word");
 
-    //fprintf(stderr, "spi mode: %d\n", mode);
-    //fprintf(stderr, "bits per word: %d\n", bits);
+    fprintf(stderr, "spi mode: %d\n", mode);
+    fprintf(stderr, "bits per word: %d\n", bits);
 
     // enable master clock for the AD
     // divisor results in roughly 4.9MHz
@@ -160,10 +163,10 @@ int DataLogger::initDataLogger() {
     // set interrupt detection to falling edge
     gpio_set_edge(drdy_GPIO,"falling");
     // get a file descriptor for the GPIO pin
-    this->sysfs_fd = gpio_fd_open(drdy_GPIO);
+    sysfs_fd = gpio_fd_open(drdy_GPIO);
 
     // resets the AD7705 so that it expects a write to the communication register
-    //    printf("sending reset\n");
+        printf("sending reset\n");
     writeReset(fd);
 
     // tell the AD7705 that the next write will be to the clock register
@@ -178,41 +181,32 @@ int DataLogger::initDataLogger() {
 
     // we read data in an endless loop and display it
     // this needs to run in a thread ideally
-    this->fd = fd;
-    this->ret = ret;
-    return fd;
- }
+    //setup array
 
-int DataLogger::runDataLogger() {
-    cout << "runDataLogger()" << endl;
 
-//        writeReg(this->fd,0x38);
-//        int value = readData(this->fd)-0x8000;
+    while (1) {
 
-    //int value =0;
-            //while (1) {
+      // let's wait for data for max one second
+      ret = gpio_poll(sysfs_fd,1000);
+      if (ret<1) {
+        fprintf(stderr,"Poll error %d\n",ret);
+      }
 
-              // let's wait for data for max one second
-              this->ret = gpio_poll(this->sysfs_fd,1000);
-              if (this->ret<1) {
-                fprintf(stderr,"Poll error %d\n",this->ret);
-              }
+      // tell the AD7705 to read the data register (16 bits)
+      writeReg(fd,0x38);
+      // read the data register by performing two 8 bit reads
+      int value = readData(fd)-0x8000;
+        fprintf(stderr,"data = %d       \r",value);
+        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        buffer->setCurrentValue(drdy_GPIO, value);
 
-              // tell the AD7705 to read the data register (16 bits)
-              writeReg(fd,0x38);
-              // read the data register by performing two 8 bit reads
-              int value = readData(fd)-0x8000;
-                fprintf(stderr,"data = %d       \r",value);
 
-                // if stdout is redirected to a file or pipe, output the data
-                if( this->no_tty )
-                {
-                    printf("%d\n", value);
-                    fflush(stdout);
-                }
-            //}
+      *currentValue = value;
 
-        //close(fd);
-        //gpio_fd_close(sysfs_fd);
-        return value;
+    }
+
+    close(fd);
+    gpio_fd_close(sysfs_fd);
+
+    return ret;
 }

@@ -1,17 +1,21 @@
 #ifndef DATALOGGER_H
 #define DATALOGGER_H
 
+#include "buffer.h"
+
 class DataLogger
 {
 public:
-    DataLogger();
+    DataLogger(Buffer *buffer, int channel);
 
-    int runDataLogger();
+    int runDataLogger(int* currentValue);
     int initDataLogger();
-    int fd;
-    int sysfs_fd;
-    int no_tty;
-    int ret;
+    int channel;
+    int drdy_GPIO;
+    int valuearray[100];
+    int average;
+    int sum;
+    Buffer *buffer;
 };
 
 #endif // DATALOGGER_H

@@ -17,6 +17,8 @@
 
 #include "adcreader.h"
 
+#include "buffer.h"
+
 // class definition 'Window'
 class Window : public QWidget
 {
@@ -24,11 +26,14 @@ class Window : public QWidget
     Q_OBJECT
 
 public:
-    Window(); // default constructor - called when a Window is declared without arguments
+    Window(Buffer *buffer); // default constructor - called when a Window is declared without arguments
 
     ~Window();
 
     void timerEvent( QTimerEvent * );
+
+    ADCreader *adcReader22;
+    Buffer *buffer;
 
 public slots:
     void setGain(double gain);
@@ -94,7 +99,7 @@ private:
     QVBoxLayout  *vLayout;  // vertical layout
     QVBoxLayout  *VLayout1;  // Vertical layout
 
-    static const int plotDataSize = 200;
+    static const int plotDataSize = 100;
 
     // data arrays for the plot
     double xData[plotDataSize];

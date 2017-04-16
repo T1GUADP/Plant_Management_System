@@ -4,9 +4,11 @@
 #include "datalogger.h"
 
 //Constructor
-ADCreader::ADCreader(double frequency){
+ADCreader::ADCreader(Buffer *buffer, int channel){
     this->running=false;
-    qDebug() << "frequency: " << frequency;
+    this->channel = channel;
+    this->buffer = buffer;
+    currentValue = new int();
 }
 //Deconstructor
 ADCreader::~ADCreader(){
@@ -15,28 +17,13 @@ ADCreader::~ADCreader(){
 
 void ADCreader::run()
 {
-    DataLogger logger;
-   logger.initDataLogger();
-    this->running = true;
+    DataLogger logger(this->buffer, this->channel);
 
-    int tmpValues[100];
-    for (int i=0; i< 100; i++) tmpValues[i] = 0;
-    int counter = 0;
-    while (running) {
-        int curValue = logger.runDataLogger();
-        tmpValues[counter] = curValue;
-
-        float movAvg = 0.;
-
-        for (int i=0; i < 100; i++) movAvg += tmpValues[i];
-        movAvg = movAvg / 100;
-
-        qDebug() << "Average value; " << movAvg;
-        if (counter = 99) counter = 0;
-        else counter ++;
-        sleep(1);
-    }
+    logger.runDataLogger(this->currentValue);
 }
+
+
+
 
 void ADCreader::quit()
 {
