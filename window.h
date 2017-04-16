@@ -13,9 +13,9 @@
 #include <qscrollbar.h>
 #include <qlcdnumber.h>
 #include <qspinbox.h>
+#include <qcolor.h>
 
-
-// #include "adcreader.h"
+#include "adcreader.h"
 
 // class definition 'Window'
 class Window : public QWidget
@@ -32,6 +32,10 @@ public:
 
 public slots:
     void setGain(double gain);
+    void setWaterTarget(int TargetWaterLevel);
+    void setTemperatureTarget(int TargetWaterLevel);
+    void setLightTarget(int TargetWaterLevel);
+
     void modetoggle();
 
 // internal variables for the window class
@@ -46,13 +50,10 @@ private:
     QPushButton  *ManualWaterTrigger;
     QPushButton  *ManualTemperatureTrigger;
     QPushButton  *ManualLightTrigger;
-    QPushButton  *ModifyButton;
-    QPushButton  *NewEntryButton;
-    QPushButton  *DeleteEntryButton;
-    QPushButton  *ApplyButton;
-    QPushButton  *Placeholder;
-    QComboBox    *PresetComboBox;
-    QPushButton  *ExitButton;
+    QPushButton  *ExitButton;   
+    QLabel       *Waterlabel;
+    QLabel       *Temperaturelabel;
+    QLabel       *Lightlabel;
     QLabel       *CurrentWaterDisplay;
     QLabel       *CurrentTemperatureDisplay;
     QLabel       *CurrentLightDisplay;
@@ -77,27 +78,43 @@ private:
     QwtPlotCurve *curve;
     QwtPlotCurve *Watercurve;
     QwtPlotCurve *Temperaturecurve;
-    QwtPlotCurve *TargetTemperaturecurve;
+    QwtPlotCurve *TargetWaterCurve;
+    QwtPlotCurve *TargetTemperatureCurve;
+    QwtPlotCurve *TargetLightCurve;
     QwtPlotCurve *Lightcurve;
 
     // layout elements from Qt itself http://qt-project.org/doc/qt-4.8/classes.html
-    QVBoxLayout  *vLayout;  // vertical layout
+
     QGridLayout  *gLayout;  // horizontal layout
-    QGridLayout  *gLayout1;  // horizontal layout
-    QGridLayout  *gLayout2;  // horizontal layout
+    QGridLayout  *gLayout1;  // grid layout
+    QGridLayout  *gLayout2;  // grid layout
+    QGridLayout  *SecondRowglayout; // Second row horizontal layout
     QHBoxLayout  *hLayout1;  // horizontal layout
     QHBoxLayout  *hLayout;  // horizontal layout
-    QVBoxLayout  *VLayout1;  // horizontal layout
+    QVBoxLayout  *vLayout;  // vertical layout
+    QVBoxLayout  *VLayout1;  // Vertical layout
 
     static const int plotDataSize = 200;
 
     // data arrays for the plot
     double xData[plotDataSize];
     double yData[plotDataSize];
-    bool currentmode;
+    //
+    double xTargetWaterData[plotDataSize];
+    double yTargetWaterData[plotDataSize];
+    double xTargetTemperatureData[plotDataSize];
+    double yTargetTemperatureData[plotDataSize];
+    double xTargetLightData[plotDataSize];
+    double yTargetLightData[plotDataSize];
+    //
     double gain;
+    int TargetWaterLevel;
+    int TargetTemperatureLevel;
+    int TargetLightLevel;
     int count;
-
+    //
+    bool currentmode;
+    //
 
 //	ADCreader *adcreader;
 };
