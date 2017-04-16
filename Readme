@@ -63,3 +63,16 @@ date:	-Replaced the entire second row with three label	//Labels are used as head
 	-Added three functions to update the taget curves	//(setWaterTarget; setTemperatureTarget; setLightTarget) Each of the functions change the respective target curve data and update the plot
 	-Connected spinboxed to trigger the functions above	//(TargetWaterLabel;TargetTemperatureLabel;CurrentLightLabel)
 	-Added extra functionality to modetoggle function	//modetoggle function will now toggle (ManualWaterTrigger; ManualTemperatureTrigger; ManualLightTrigger) avtive/inactive based on the burrent mode bool
+
+0.0.6	-Implemented adcreader thread to start "datalogger"	//attempting to display recorded values on window via pointers
+date:	
+12.04.17
+
+0.0.7	-Implemented buffer					//pointers replaced by repeated push by datalogger and regular average reqest from window
+date:	-complete wrapper for datalogger			//only for channel 0
+14.04.17
+
+0.0.8	-modified user interface to fit one plot		//moode toggle changes data displayed on plot
+date:	-implemented toggle mode to read channel 0 or 1		//adc component returns valid values when used with one thread but returns useless values when two threads attempt to read values for their channel
+15.04.17
+

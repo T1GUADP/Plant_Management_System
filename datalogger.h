@@ -8,7 +8,7 @@ class DataLogger
 public:
     DataLogger(Buffer *buffer, int channel);
 
-    int runDataLogger(int* currentValue);
+    int runDataLogger();
     int initDataLogger();
     int channel;
     int drdy_GPIO;

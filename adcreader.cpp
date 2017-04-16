@@ -19,7 +19,7 @@ void ADCreader::run()
 {
     DataLogger logger(this->buffer, this->channel);
 
-    logger.runDataLogger(this->currentValue);
+    logger.runDataLogger();
 }
 
 

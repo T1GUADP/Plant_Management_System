@@ -2,7 +2,6 @@
 #define WINDOW_H
 
 #include <qwt/qwt_thermo.h>
-#include <qwt/qwt_knob.h>
 #include <qwt/qwt_plot.h>
 #include <qwt/qwt_plot_curve.h>
 #include <qpushbutton.h>
@@ -32,11 +31,12 @@ public:
 
     void timerEvent( QTimerEvent * );
 
-    ADCreader *adcReader22;
+    ADCreader *adcReader0;
+
+    ADCreader *adcReader1;
     Buffer *buffer;
 
 public slots:
-    void setGain(double gain);
     void setWaterTarget(int TargetWaterLevel);
     void setTemperatureTarget(int TargetWaterLevel);
     void setLightTarget(int TargetWaterLevel);
@@ -74,12 +74,14 @@ private:
     QLabel       *TemperatureSensorConnectionStateLabel;
     QLabel       *LightSensorConnectionStateLabel;
     QPushButton  *ModeButton;
-    QwtKnob      *knob;
     QwtThermo    *thermo;
     QwtPlot      *plot;
     QwtPlot      *WaterPlot;
     QwtPlot      *TemperaturePlot;
     QwtPlot      *LightPlot;
+    QwtPlot      *MainPlot;
+    QwtPlotCurve *MainCurve;
+    QwtPlotCurve *MainTargetCurve;
     QwtPlotCurve *curve;
     QwtPlotCurve *Watercurve;
     QwtPlotCurve *Temperaturecurve;
@@ -119,7 +121,6 @@ private:
     double xCurrentLightData[plotDataSize];
     double yCurrentLightData[plotDataSize];
     //
-    double gain;
     int TargetWaterLevel;
     int TargetTemperatureLevel;
     int TargetLightLevel;

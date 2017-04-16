@@ -22,12 +22,12 @@ static void pabort(const char *s)
     abort();
 }
 
-static const char *device = "/dev/spidev0.0";
-static uint8_t mode = SPI_CPHA | SPI_CPOL;
-static uint8_t bits = 8;
-//int drdy_GPIO = this-zzz ;//27
+const char *device = "/dev/spidev0.0";
+uint8_t mode = SPI_CPHA | SPI_CPOL;
+uint8_t bits = 8;
+int drdy_GPIO = 22;//27
 
-static void writeReset(int fd)
+void writeReset(int fd)
 {
   int ret;
   uint8_t tx1[5] = {0xff,0xff,0xff,0xff,0xff};
@@ -46,7 +46,7 @@ static void writeReset(int fd)
   }
 }
 
-static void writeReg(int fd, uint8_t v)
+void writeReg(int fd, uint8_t v)
 {
   int ret;
   uint8_t tx1[1];
@@ -64,7 +64,7 @@ static void writeReg(int fd, uint8_t v)
     pabort("can't send spi message");
 }
 
-static uint8_t readReg(int fd)
+uint8_t readReg(int fd)
 {
     int ret;
     uint8_t tx1[1];
@@ -84,7 +84,7 @@ static uint8_t readReg(int fd)
     return rx1[0];
 }
 
-static int readData(int fd)
+int readData(int fd)
 {
     int ret;
     uint8_t tx1[2] = {0,0};
@@ -111,16 +111,21 @@ DataLogger::DataLogger(Buffer *buffer, int channel)
 {
     cout << "DataLogger created" << endl;
     this->channel =  channel;   // not required
-    this->drdy_GPIO = channel;
     this->buffer = buffer;
 }
 
-int DataLogger::runDataLogger(int* currentValue) {
+int DataLogger::runDataLogger() {
+
+
+    int drdy_GPIO = 22;
+    const char *device = "/dev/spidev0.0";
+    uint8_t mode = SPI_CPHA | SPI_CPOL;
+    uint8_t bits = 8;
     int ret = 0;
     int fd;
     int sysfs_fd;
 
-    int no_tty = !isatty( fileno(stdout) );
+    //int no_tty = !isatty( fileno(stdout) );
 
     fd = open(device, O_RDWR);
     if (fd < 0)
@@ -176,6 +181,7 @@ int DataLogger::runDataLogger(int* currentValue) {
 
     // tell the AD7705 that the next write will be the setup register
     writeReg(fd,0x10);
+
     // intiates a self calibration and then after that starts converting
     writeReg(fd,0x40);
 
@@ -184,25 +190,23 @@ int DataLogger::runDataLogger(int* currentValue) {
     //setup array
 
 
+    int value ;
     while (1) {
 
-      // let's wait for data for max one second
-      ret = gpio_poll(sysfs_fd,1000);
-      if (ret<1) {
-        fprintf(stderr,"Poll error %d\n",ret);
-      }
+        // let's wait for data for max one second
+        ret = gpio_poll(sysfs_fd,1000);
+        if (ret<1) {
+            fprintf(stderr,"Poll error %d\n",ret);
+        }
 
-      // tell the AD7705 to read the data register (16 bits)
-      writeReg(fd,0x38);
-      // read the data register by performing two 8 bit reads
-      int value = readData(fd)-0x8000;
+        // tell the AD7705 to read the data register (16 bits)
+        //Rpecify channel
+        writeReg(fd,0x38 | channel);
+        // read the data register by performing two 8 bit reads
+        value = readData(fd)-0x8000;
         fprintf(stderr,"data = %d       \r",value);
-        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-        buffer->setCurrentValue(drdy_GPIO, value);
-
-
-      *currentValue = value;
-
+        //Push to buffer
+        buffer->setCurrentValue(channel, value);
     }
 
     close(fd);
